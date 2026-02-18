@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Memory {
     private int totalFrames;
@@ -64,5 +66,39 @@ public class Memory {
 
     public int[] getFrames() {
         return frames;
+    }
+
+    public String getFreeBlocksString() {
+        List<Integer> freeIndexes = new ArrayList<>();
+        for (int i = 0; i <frames.length;i++){
+            if (frames[i] == 0){
+                freeIndexes.add(i);
+            }
+        }
+        return freeIndexes.stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining(" "));
+    }
+
+    public String getMemoryLayoutString() {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < frames.length; i++) {
+            if (frames[i] == 0) {
+                sb.append(". ");
+            } else {
+                sb.append(frames[i]).append(" ");
+            }
+        }
+
+        return sb.toString().trim();
+    }
+
+    public int[] getMemoryArray() {
+        int[] memArray = new int[frames.length];
+        for (int i = 0; i < frames.length; i++) {
+            memArray[i] = frames[i]; // or 0 if empty
+        }
+        return memArray;
     }
 }
