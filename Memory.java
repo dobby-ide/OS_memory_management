@@ -58,7 +58,11 @@ public class Memory {
         System.out.println("]");
     }
 
+    public int getTotalFrames() {
+        return totalFrames;
+    }
 
-
-
+    public int[] getFrames() {
+        return frames;
+    }
 }

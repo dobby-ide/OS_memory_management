@@ -6,11 +6,13 @@ public class Main {
 
         List<Job> jobs = JobLoader.loadJobs("jobs_data_txt/jobs_table1.txt");
 
-        for (Job job : jobs){
-            System.out.println("Job ID: " + job.jobId +
-                    " | Start: " + job.startTime +
-                    " | Duration: " + job.duration +
-                    " | Size: " + job.size);
-        }
+
+        
+//        for (Job job : jobs){
+//            System.out.println("Job ID: " + job.jobId +
+//                    " | Start: " + job.startTime +
+//                    " | Duration: " + job.duration +
+//                    " | Size: " + job.size);
+//        }
     }
 }

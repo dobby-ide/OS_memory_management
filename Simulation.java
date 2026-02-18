@@ -1,3 +1,4 @@
+import java.io.Console;
 import java.util.List;
 
 public class Simulation {
@@ -11,12 +12,15 @@ public class Simulation {
 
     public void run(){
         System.out.println("simulation has started -----");
+        ConsolePrinter printer = new ConsolePrinter();
 
         while (!scheduler.allJobsFinished()){
             System.out.println("Tick: " + currentTime);
 
             scheduler.tick(currentTime);
 
+            printer.printMemoryState(scheduler.getMemory());
+            printer.printJobStates(scheduler.getAllJobs());
             currentTime++;
         }
         System.out.println("----- all jobs finished");

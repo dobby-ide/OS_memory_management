@@ -38,4 +38,6 @@ public class Job {
     public void tick() {
         if (remainingTime > 0) remainingTime--;
     }
+
+
 }

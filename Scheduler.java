@@ -93,6 +93,11 @@ public class Scheduler {
         return false;
     }
 
+    public List<Job> getAllJobs() {
+        return allJobs;
+    }
 
-
+    public Memory getMemory() {
+        return memory;
+    }
 }
