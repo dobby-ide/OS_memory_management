@@ -17,32 +17,131 @@ public class Memory {
     // If, from any frame of the memory, consecutive spaces are found such that job.size() fits,
     // the frames will be marked as used by that jobID,
     // and the job stores the allocated "addresses" in which it is running*/
-    public boolean allocateFirstFit(Job job){
-        List<Integer> allocated = new ArrayList<>();
-        int consecutive = 0; // though allocateFirstFit
 
-        for (int i =0 ; i < frames.length; i++){
-            // checks if some place in memory there are free consecutive frames to fit the job size
-            if(frames[i] == 0){
-                consecutive++;
-                allocated.add(i);
-                if(consecutive == job.size){
-                    for (int idx : allocated){
-                        frames[idx] = job.jobId;
+
+    // FIRST-FIT
+    public boolean allocateFirstFit(Job job) {
+
+        int i = 0;
+        while (i < frames.length) {
+
+            if (frames[i] == 0) {
+                int start = i;
+                int size = 0;
+
+                while (i < frames.length && frames[i] == 0) {
+                    size++;
+                    i++;
+                }
+
+                Hole hole = new Hole(start, size);
+
+                if (hole.size >= job.size) {
+                    List<Integer> allocated = new ArrayList<>();
+                    for (int j = 0; j < job.size; j++) {
+                        frames[hole.start + j] = job.jobId;
+                        allocated.add(hole.start + j);
                     }
                     job.allocateFrames(allocated);
                     return true;
                 }
 
             } else {
-                // resets the consecutive counter and the list of frames that were previously stored
-                allocated.clear();
-                consecutive = 0;
+                i++;
             }
         }
 
         return false;
     }
+
+
+    // BEST-FIT
+    public boolean allocateBestFit(Job job) {
+
+        Hole bestHole = null;
+
+        int i = 0;
+        while (i < frames.length) {
+
+            if (frames[i] == 0) {
+                int start = i;
+                int size = 0;
+
+                while (i < frames.length && frames[i] == 0) {
+                    size++;
+                    i++;
+                }
+
+                Hole hole = new Hole(start, size);
+
+                if (hole.size >= job.size) {
+                    if (bestHole == null || hole.size < bestHole.size) {
+                        bestHole = hole;
+                    }
+                }
+
+            } else {
+                i++;
+            }
+        }
+
+        if (bestHole != null) {
+            List<Integer> allocated = new ArrayList<>();
+            for (int j = 0; j < job.size; j++) {
+                frames[bestHole.start + j] = job.jobId;
+                allocated.add(bestHole.start + j);
+            }
+            job.allocateFrames(allocated);
+            return true;
+        }
+
+        return false;
+    }
+
+
+    // WORST-FIT
+    public boolean allocateWorstFit(Job job) {
+
+        Hole worstHole = null;
+
+        int i = 0;
+        while (i < frames.length) {
+
+            if (frames[i] == 0) {
+                int start = i;
+                int size = 0;
+
+                while (i < frames.length && frames[i] == 0) {
+                    size++;
+                    i++;
+                }
+
+                Hole hole = new Hole(start, size);
+
+                if (hole.size >= job.size) {
+                    if (worstHole == null || hole.size > worstHole.size) {
+                        worstHole = hole;
+                    }
+                }
+
+            } else {
+                i++;
+            }
+        }
+
+        if (worstHole != null) {
+            List<Integer> allocated = new ArrayList<>();
+            for (int j = 0; j < job.size; j++) {
+                frames[worstHole.start + j] = job.jobId;
+                allocated.add(worstHole.start + j);
+            }
+            job.allocateFrames(allocated);
+            return true;
+        }
+
+        return false;
+    }
+
 
     public void deallocate(Job job){
         for (int frameIndex : job.allocatedFrames){

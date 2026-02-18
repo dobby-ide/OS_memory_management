@@ -32,7 +32,7 @@ public class Scheduler {
             Job job = newIter.next();
 
             if (job.startTime <= currentTime) {
-                if (memory.allocateFirstFit(job)) {
+                if (memory.allocateWorstFit(job)) {
                     job.currentState = State.RUNNING;
                     runningJobs.add(job);
                     newIter.remove();
