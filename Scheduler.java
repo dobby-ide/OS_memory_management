@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 //
@@ -13,6 +14,7 @@ public class Scheduler {
     List<Job> newJobs = new ArrayList<>();
     List<Job> runningJobs = new ArrayList<>();
     List<Job> finishedJobs = new ArrayList<>();
+    List<String[]> reportRows = new ArrayList<>();
     private Memory memory;
 
     public Scheduler(List<Job> jobs, Memory memory) {
@@ -74,6 +76,67 @@ public class Scheduler {
         }
         return false;
     }
+
+    public void collectSnapshot(int currentTime) {
+        String timeCol = String.valueOf(currentTime);
+
+        String freeBlocksCol = memory.getFreeBlocksString();
+        String runningCol = runningJobs.stream()
+                .map(j -> String.valueOf(j.jobId))
+                .collect(Collectors.joining(" "));
+
+        // Convert memory to a neat visual string
+        String memoryCol = formatMemory(memory.getMemoryArray(), 10); // 10 frames per line
+
+        reportRows.add(new String[]{timeCol, freeBlocksCol, runningCol, memoryCol});
+    }
+
+    private String formatMemory(int[] mem, int framesPerLine) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < mem.length; i++) {
+            sb.append(mem[i] == 0 ? "." : mem[i]);
+            sb.append(" ");
+
+        }
+        return sb.toString().trim();
+    }
+
+    public void printFinalReport() {
+        // Reasonable fixed widths
+        int timeWidth = 6;
+        int freeWidth = 50;
+        int runningWidth = 20;
+        int memoryWidth = 50; // frames per line
+
+        // Print header
+        System.out.printf("%-" + timeWidth + "s | %-" + freeWidth + "s | %-" + runningWidth + "s | %s\n",
+                "TIME", "FREE BLOCKS", "RUNNING JOBS", "MEMORY");
+        System.out.println("-".repeat(timeWidth + freeWidth + runningWidth + memoryWidth + 9));
+
+        for (String[] row : reportRows) {
+            String memoryStr = row[3];
+            // Split memory into chunks of memoryWidth
+            int start = 0;
+            while (start < memoryStr.length()) {
+                int end = Math.min(start + memoryWidth, memoryStr.length());
+                String memChunk = memoryStr.substring(start, end);
+
+                if (start == 0) {
+                    // First line, print everything
+                    System.out.printf("%-" + timeWidth + "s | %-" + freeWidth + "s | %-" + runningWidth + "s | %s\n",
+                            row[0], row[1], row[2], memChunk);
+                } else {
+                    // Subsequent lines, print memory only
+                    System.out.printf("%-" + timeWidth + "s | %-" + freeWidth + "s | %-" + runningWidth + "s | %s\n",
+                            "", "", "", memChunk);
+                }
+                start = end;
+            }
+        }
+    }
+
+
+
 
     public List<Job> getAllJobs() {
         return allJobs;
