@@ -42,5 +42,23 @@ public class Memory {
         return false;
     }
 
-    
+    public void deallocate(Job job){
+        for (int frameIndex : job.allocatedFrames){
+            frames[frameIndex] = 0;
+        }
+        job.deallocateFrames();
+    }
+
+    public void printMemoryState() {
+        System.out.print("Memory: [");
+        for (int i = 0; i < frames.length; i++) {
+            System.out.print(frames[i]);
+            if (i != frames.length - 1) System.out.print(", ");
+        }
+        System.out.println("]");
+    }
+
+
+
+
 }
