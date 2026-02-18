@@ -1,22 +1,26 @@
 import java.util.List;
 
 public class Simulation {
-    private List<Job> jobs;
-    private Memory memory;
+    private Scheduler scheduler;
     private int currentTime;
 
     public Simulation(List<Job> jobs, Memory memory){
-        this.jobs=jobs;
-        this.memory= memory;
+        this.scheduler = new Scheduler(jobs, memory);
         this.currentTime = 0;
     }
 
     public void run(){
-        while(!allJobsFinished()){}
+        System.out.println("simulation has started -----");
+
+        while (!scheduler.allJobsFinished()){
+            System.out.println("Tick: " + currentTime);
+
+            scheduler.tick(currentTime);
+
+            currentTime++;
+        }
+        System.out.println("----- all jobs finished");
     }
 
-    private boolean allJobsFinished(){
 
-        return false;
-    }
 }
