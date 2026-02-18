@@ -6,8 +6,15 @@ public class Main {
 
         List<Job> jobs = JobLoader.loadJobs("jobs_data_txt/jobs_table1.txt");
 
+        Memory memory = new Memory(20);
 
-        
+        Simulation simulation = new Simulation(jobs, memory);
+
+        simulation.run();
+
+        System.out.println("END");
+
+
 //        for (Job job : jobs){
 //            System.out.println("Job ID: " + job.jobId +
 //                    " | Start: " + job.startTime +

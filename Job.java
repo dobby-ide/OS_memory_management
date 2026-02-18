@@ -6,38 +6,45 @@ import java.util.List;
 // */
 public class Job {
     int jobId;
-    int duration;
     int startTime;
+    int duration;
     int remainingTime;
-    int endTime;
-    State currentState;
-
-    // Memory
     int size;
+
+    State currentState;   // NEW, RUNNING, SLEEP, END
+    State finalState;     // SLEEP or END (what happens when interval finishes)
+
     List<Integer> allocatedFrames;
 
-    public Job(int jobId, int startTime, int duration, int size) {
+    public Job(int jobId, int startTime, int duration, int size, State finalState) {
         this.jobId = jobId;
-        this.duration = duration;
         this.startTime = startTime;
+        this.duration = duration;
         this.remainingTime = duration;
-        this.endTime = startTime + duration;
         this.size = size;
         this.currentState = State.NEW;
+        this.finalState = finalState;
         this.allocatedFrames = new ArrayList<>();
     }
 
-    public void allocateFrames(List<Integer> frames){
+    // Memory methods
+    public void allocateFrames(List<Integer> frames) {
         allocatedFrames.clear();
         allocatedFrames.addAll(frames);
     }
+
     public void deallocateFrames() {
         allocatedFrames.clear();
     }
 
     public void tick() {
-        if (remainingTime > 0) remainingTime--;
+        if (currentState == State.RUNNING) {
+            remainingTime--;
+        }
     }
 
+    public boolean isFinished() {
+        return remainingTime <= 0;
+    }
 
 }
