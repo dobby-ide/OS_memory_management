@@ -20,8 +20,8 @@ public class JobLoader {
 
                 int jobId = Integer.parseInt(parts[0].trim());
                 int startTime = Integer.parseInt(parts[1].trim());
-                int duration = Integer.parseInt(parts[2].trim());
-                int size = Integer.parseInt(parts[3].trim());
+                int duration = Integer.parseInt(parts[3].trim());
+                int size = Integer.parseInt(parts[2].trim());
                 String stateString = parts[4].trim();
                 State finalState = State.valueOf(stateString.toUpperCase());
                 Job job = new Job(jobId, startTime, duration, size, finalState);

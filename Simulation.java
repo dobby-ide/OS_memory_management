@@ -18,13 +18,16 @@ public class Simulation {
             System.out.println("Tick: " + currentTime);
 
             scheduler.tick(currentTime);
+            scheduler.collectSnapshot(currentTime);
 
             printer.printMemoryState(scheduler.getMemory());
             printer.printJobStates(scheduler.getAllJobs());
             currentTime++;
         }
+        scheduler.printFinalReport();
         System.out.println("----- all jobs finished");
     }
+
 
 
 }
